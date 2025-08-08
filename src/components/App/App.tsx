@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchMovies } from '../../services/movieService.ts';
 import SearchBar from '../../components/SearchBar/SearchBar.tsx';
 import MovieGrid from '../MovieGrid/MovieGrid.tsx';
@@ -28,15 +28,18 @@ export default function App() {
 
   const handleSearch = async (query: string): Promise<void> => {
     setQuery(query);
-    setPage(1); 
-    if (isError) {
+    setPage(1);
+  };
+
+  useEffect(() => {
+    if (isError && !data) {
       toast.error('An error occurred while fetching movies.');
     }
     if (data && data.results.length === 0) {
       toast.error('No movies found for your request.');
     }
-  };
-
+  }, [isError, data]);
+  
   const handleSelectMovie = (movie: Movie) => {
         setSelectedMovie(movie);
     };
